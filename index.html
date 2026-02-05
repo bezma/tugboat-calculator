@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tug Service Calculator</title>
+  <style>
+    :root {
+      --bg-1: #f6f5f2;
+      --bg-2: #eef2ff;
+      --ink: #0b1220;
+      --muted: #4b5563;
+      --card: #ffffff;
+      --accent: #0f766e;
+      --accent-2: #f59e0b;
+      --danger: #b91c1c;
+      --ring: rgba(15, 118, 110, 0.25);
+      --shadow: 0 18px 40px rgba(11, 18, 32, 0.12);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Space Grotesk", "Segoe UI", Arial, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, var(--bg-2), transparent 60%),
+        radial-gradient(900px 400px at 90% 10%, #fde68a55, transparent 55%),
+        linear-gradient(180deg, #f8fafc, var(--bg-1));
+      padding: 28px 16px 48px;
+    }
+
+    body.density-comfortable .card { padding: 20px 22px; margin-bottom: 18px; }
+    body.density-comfortable label { margin-top: 12px; }
+    body.density-comfortable input,
+    body.density-comfortable select { padding: 11px 13px; font-size: 15px; }
+    body.density-comfortable .row { gap: 12px; }
+    body.density-comfortable .actions { gap: 12px; margin-bottom: 18px; }
+    body.density-comfortable button { font-size: 15px; }
+
+    body.density-dense .card { padding: 12px 14px; margin-bottom: 10px; }
+    body.density-dense label { margin-top: 8px; font-size: 13px; }
+    body.density-dense input,
+    body.density-dense select { padding: 8px 10px; font-size: 14px; }
+    body.density-dense .row { gap: 8px; }
+    body.density-dense .actions { gap: 8px; margin-bottom: 10px; }
+    body.density-dense button { font-size: 13px; padding: 10px 12px; }
+    body.density-dense .tug-total { font-size: 13px; padding: 8px 10px; }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-size: clamp(28px, 3.8vw, 44px);
+      letter-spacing: -0.02em;
+      margin: 0 0 6px;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 18px;
+      margin-bottom: 14px;
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      animation: rise 420ms ease;
+    }
+
+    @keyframes rise {
+      from { transform: translateY(10px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 1.35;
+      color: #1f2937;
+    }
+    label.checkbox {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 500;
+    }
+    label.checkbox input {
+      width: auto;
+      margin: 0;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 9px 11px;
+      margin-top: 6px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      background: #fff;
+      font-size: 15px;
+      line-height: 1.4;
+      transition: border-color 150ms ease, box-shadow 150ms ease;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--ring);
+    }
+
+    input[readonly] {
+      background: #ecfeff;
+      border-color: #99f6e4;
+      font-weight: 700;
+      color: #0f766e;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+    }
+
+    .section-title {
+      margin-top: 14px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #64748b;
+    }
+
+    .note {
+      margin-top: 8px;
+      font-size: 13px;
+      line-height: 1.4;
+      color: #0f766e;
+    }
+
+    .min-note { color: #b45309; }
+    .imo-master-label { color: #b91c1c; }
+
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    #tugCards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    @media (min-width: 1280px) {
+      #tugCards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 900px) {
+      #tugCards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    button {
+      padding: 12px 14px;
+      border: none;
+      border-radius: 12px;
+      background: var(--accent);
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+      box-shadow: 0 10px 20px rgba(15, 118, 110, 0.2);
+    }
+
+    button:hover { transform: translateY(-1px); }
+
+    button.secondary {
+      background: #111827;
+      box-shadow: 0 10px 20px rgba(17, 24, 39, 0.2);
+    }
+
+    button.danger {
+      background: var(--danger);
+      box-shadow: 0 10px 20px rgba(185, 28, 28, 0.2);
+    }
+
+    .tug-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .tug-total {
+      margin-top: 12px;
+      padding: 10px 12px;
+      background: #f1f5f9;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      align-items: center;
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    .summary strong { font-size: 18px; }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #ecfeff;
+      color: #0f766e;
+      font-weight: 600;
+      font-size: 12px;
+      margin-top: 6px;
+    }
+
+    .density-toggle {
+      display: inline-flex;
+      gap: 6px;
+      padding: 6px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+    }
+
+    .density-toggle button {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: transparent;
+      color: #111827;
+      box-shadow: none;
+      font-size: 13px;
+    }
+
+    .density-toggle button.active {
+      background: #0f766e;
+      color: #fff;
+    }
+
+    @media print {
+      button { display: none; }
+      body { background: white; padding: 0; }
+      .card { box-shadow: none; border: 1px solid #e5e7eb; }
+      .card { padding: 12px 14px; margin-bottom: 10px; }
+      label { margin-top: 8px; font-size: 13px; }
+      input, select { padding: 8px 10px; font-size: 14px; }
+      .row { gap: 8px; }
+      .actions { gap: 8px; margin-bottom: 10px; }
+      button { font-size: 13px; padding: 10px 12px; }
+      .tug-total { font-size: 13px; padding: 8px 10px; }
+      #tugCards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media print and (min-width: 1280px) {
+      #tugCards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    @media print and (max-width: 900px) {
+      #tugCards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      <div>
+        <h1>Tug Service Calculator</h1>
+        <div class="pill">Auto-tariff by GT, per-tug totals, and a clean summary for arrivals and departures.</div>
+        <div class="pill">Minimums: Voyage 1h · Assistance 30m</div>
+      </div>
+      <div class="density-toggle" role="group" aria-label="Density">
+        <button id="densityComfortable" type="button" class="active">Comfortable</button>
+        <button id="densityDense" type="button">Dense</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <div>
+          <label>Vessel Name</label>
+          <input id="vesselName" placeholder="e.g., MV King Bezma" />
+        </div>
+        <div>
+          <label>Gross Tonnage (GT)</label>
+          <input type="number" id="gt" min="0" placeholder="Enter GT" />
+        </div>
+        <div>
+          <label>Base Tariff (EUR / hour)</label>
+          <input type="number" id="tariff" readonly />
+          <div class="note">Tariff is auto-selected from GT</div>
+        </div>
+      </div>
+      <label class="checkbox imo-master-label" style="margin-top:12px;">
+        <input type="checkbox" id="imoMaster" />
+        Transporting inflammable materials (IMO Code Classes I-III)
+      </label>
+    </div>
+
+    <div id="tugCards"></div>
+
+    <div class="actions">
+      <button onclick="addTug()">+ Add Tugboat</button>
+      <button class="secondary" onclick="printDense()">Print / Save as PDF</button>
+    </div>
+
+    <div class="card" id="finalTotal" style="display:none;"></div>
+  </div>
+
+  <script>
+    document.body.classList.add('density-comfortable');
+
+    let tugCount = 0;
+
+    //----------------------------------
+    // MINIMUM BILLING RULES
+    //----------------------------------
+    const MIN_VOYAGE = 1;   // hours
+    const MIN_ASSIST = 0.5; // hours (30 min minimum)
+
+    //----------------------------------
+    // GT → TARIFF LOGIC
+    //----------------------------------
+    function getTariffFromGT(gt) {
+      if (!gt || gt <= 0) return 0;
+
+      if (gt <= 2000) return 698;
+      if (gt <= 5000) return 908;
+      if (gt <= 10000) return 1133;
+      if (gt <= 15000) return 1294;
+      if (gt <= 25000) return 1358;
+      if (gt <= 30000) return 1646;
+      if (gt <= 35000) return 1863;
+
+      const extraThousands = Math.ceil((gt - 35000) / 1000);
+      return 1863 + (extraThousands * 16);
+    }
+
+    //----------------------------------
+    // AUTO TARIFF
+    //----------------------------------
+    document.getElementById('gt').addEventListener('input', () => {
+      const gt = Number(document.getElementById('gt').value);
+      const tariff = getTariffFromGT(gt);
+      document.getElementById('tariff').value = tariff || '';
+      calculate();
+    });
+
+    //----------------------------------
+    // TUG UI
+    //----------------------------------
+    function addTug() {
+      tugCount++;
+      document.getElementById('tugCards').insertAdjacentHTML('beforeend', `
+        <div class="card" id="tug_${tugCount}">
+          <div class="tug-header">
+            <h3 class="tug-title">Tugboat</h3>
+            <button class="danger" onclick="removeTug(${tugCount})">Remove</button>
+          </div>
+
+          <label>Operation</label>
+          <select id="op_${tugCount}">
+            <option value="arrival">Arrival (IN)</option>
+            <option value="departure">Departure (OUT)</option>
+          </select>
+
+          <label>Voyage Time</label>
+          <select id="voyage_${tugCount}">
+            <option value="0.5">30 min</option>
+            <option value="1">1 hour</option>
+            <option value="1.5">1.5 hours</option>
+          </select>
+
+          <label>Assistance Time</label>
+          <select id="assist_${tugCount}">
+            <option value="0.5">Up to 30 min</option>
+            <option value="1">Within 1 hour</option>
+            <option value="1.5">Within 1.5 hours</option>
+          </select>
+
+          <div class="section-title">Assistance Surcharges</div>
+          <label class="checkbox"><input type="checkbox" id="imo_${tugCount}" /> 20% IMO (Inflammable cargo)</label>
+          <label class="checkbox"><input type="checkbox" id="lines_${tugCount}" /> 15% Usage of tug lines</label>
+          <label class="checkbox"><input type="checkbox" id="kw_${tugCount}" /> 30% Tug above 2000 kW</label>
+
+          <div class="section-title">Overtime</div>
+          <label>Voyage Overtime</label>
+          <select id="voy_ot_${tugCount}">
+            <option value="0">Normal</option>
+            <option value="0.25">25% (Mon–Sat)</option>
+            <option value="0.50">50% (Sun & Holidays)</option>
+          </select>
+
+          <label>Assistance Overtime</label>
+          <select id="assist_ot_${tugCount}">
+            <option value="0">Normal</option>
+            <option value="0.25">25% (Mon–Sat)</option>
+            <option value="0.50">50% (Sun & Holidays)</option>
+          </select>
+
+          <div class="tug-total" id="tugTotal_${tugCount}">Tug total: €0.00</div>
+        </div>
+      `);
+
+      applyImoMaster();
+      syncImoMaster();
+      updateTugTitles();
+      calculate();
+    }
+
+    function removeTug(id) {
+      document.getElementById(`tug_${id}`)?.remove();
+      syncImoMaster();
+      updateTugTitles();
+      calculate();
+    }
+
+    //----------------------------------
+    // AUTO CALC LISTENERS
+    //----------------------------------
+    document.addEventListener('input', calculate);
+    document.addEventListener('change', () => {
+      updateTugTitles();
+      calculate();
+    });
+
+    //----------------------------------
+    // IMO MASTER TOGGLE
+    //----------------------------------
+    const imoMaster = document.getElementById('imoMaster');
+
+    function applyImoMaster() {
+      const checked = imoMaster.checked;
+      imoMaster.indeterminate = false;
+      for (let i = 1; i <= tugCount; i++) {
+        const cb = document.getElementById(`imo_${i}`);
+        if (cb) cb.checked = checked;
+      }
+    }
+
+    function syncImoMaster() {
+      let total = 0;
+      let checked = 0;
+      for (let i = 1; i <= tugCount; i++) {
+        const cb = document.getElementById(`imo_${i}`);
+        if (!cb) continue;
+        total++;
+        if (cb.checked) checked++;
+      }
+      if (total === 0) {
+        imoMaster.checked = false;
+        imoMaster.indeterminate = false;
+        return;
+      }
+      if (checked === 0) {
+        imoMaster.checked = false;
+        imoMaster.indeterminate = false;
+      } else if (checked === total) {
+        imoMaster.checked = true;
+        imoMaster.indeterminate = false;
+      } else {
+        imoMaster.checked = false;
+        imoMaster.indeterminate = true;
+      }
+    }
+
+    imoMaster.addEventListener('change', () => {
+      applyImoMaster();
+      calculate();
+    });
+
+    document.addEventListener('change', (event) => {
+      const target = event.target;
+      if (target && target.id && target.id.startsWith('imo_')) {
+        syncImoMaster();
+      }
+    });
+
+    //----------------------------------
+    // DENSITY TOGGLE
+    //----------------------------------
+    const densityComfortable = document.getElementById('densityComfortable');
+    const densityDense = document.getElementById('densityDense');
+
+    function setDensity(mode) {
+      document.body.classList.toggle('density-comfortable', mode === 'comfortable');
+      document.body.classList.toggle('density-dense', mode === 'dense');
+      densityComfortable.classList.toggle('active', mode === 'comfortable');
+      densityDense.classList.toggle('active', mode === 'dense');
+    }
+
+    densityComfortable.addEventListener('click', () => setDensity('comfortable'));
+    densityDense.addEventListener('click', () => setDensity('dense'));
+
+    //----------------------------------
+    // PRINT IN DENSE MODE
+    //----------------------------------
+    function printDense() {
+      const wasComfortable = document.body.classList.contains('density-comfortable');
+      setDensity('dense');
+      window.print();
+      if (wasComfortable) setDensity('comfortable');
+    }
+
+    //----------------------------------
+    // CALC ENGINE WITH MINIMUM BILLING
+    //----------------------------------
+    function updateTugTitles() {
+      const cards = document.querySelectorAll('#tugCards .card');
+      let arrivalIndex = 0;
+      let departureIndex = 0;
+
+      cards.forEach(card => {
+        const id = card.id.split('_')[1];
+        const op = document.getElementById(`op_${id}`)?.value;
+        const title = card.querySelector('.tug-title');
+        if (!title) return;
+
+        if (op === 'arrival') {
+          arrivalIndex++;
+          title.innerText = `${arrivalIndex}${getOrdinal(arrivalIndex)} Tugboat on arrival`;
+        } else {
+          departureIndex++;
+          title.innerText = `${departureIndex}${getOrdinal(departureIndex)} Tugboat on departure`;
+        }
+      });
+    }
+
+    function getOrdinal(n) {
+      if (n % 10 === 1 && n % 100 !== 11) return 'st';
+      if (n % 10 === 2 && n % 100 !== 12) return 'nd';
+      if (n % 10 === 3 && n % 100 !== 13) return 'rd';
+      return 'th';
+    }
+
+    function calculate() {
+      const tariff = Number(document.getElementById('tariff').value) || 0;
+      const final = document.getElementById('finalTotal');
+
+      if (!tariff) {
+        final.style.display = 'none';
+        return;
+      }
+
+      let arrivalTotal = 0;
+      let departureTotal = 0;
+
+      for (let i = 1; i <= tugCount; i++) {
+        if (!document.getElementById(`tug_${i}`)) continue;
+
+        let voyage = Number(document.getElementById(`voyage_${i}`).value);
+        let assist = Number(document.getElementById(`assist_${i}`).value);
+        const op = document.getElementById(`op_${i}`).value;
+
+        // APPLY MINIMUMS
+        voyage = Math.max(voyage, MIN_VOYAGE);
+        assist = Math.max(assist, MIN_ASSIST);
+
+        const voyageOT = Number(document.getElementById(`voy_ot_${i}`).value);
+        const assistOT = Number(document.getElementById(`assist_ot_${i}`).value);
+
+        const voyageCost = tariff * voyage * (1 + voyageOT);
+
+        let assistMultiplier = 1 + assistOT;
+        if (document.getElementById(`imo_${i}`).checked) assistMultiplier += 0.20;
+        if (document.getElementById(`lines_${i}`).checked) assistMultiplier += 0.15;
+        if (document.getElementById(`kw_${i}`).checked) assistMultiplier += 0.30;
+
+        const assistCost = tariff * assist * assistMultiplier;
+        const total = voyageCost + assistCost;
+
+        document.getElementById(`tugTotal_${i}`).innerText = `Tug total: €${total.toFixed(2)}`;
+
+        if (op === 'arrival') arrivalTotal += total;
+        else departureTotal += total;
+      }
+
+      if (arrivalTotal === 0 && departureTotal === 0) {
+        final.style.display = 'none';
+        return;
+      }
+
+      final.style.display = 'block';
+      final.innerHTML = `
+        <div class="summary">
+          <div><strong>Arrival total</strong><br>€${arrivalTotal.toFixed(2)}</div>
+          <div><strong>Departure total</strong><br>€${departureTotal.toFixed(2)}</div>
+          <div><strong>Grand total</strong><br>€${(arrivalTotal + departureTotal).toFixed(2)}</div>
+        </div>
+      `;
+    }
+
+    // Start with one tug for convenience
+    addTug();
+  </script>
+</body>
+</html>
