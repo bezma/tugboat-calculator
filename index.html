@@ -300,7 +300,7 @@
     <div class="hero">
       <div>
         <h1>Tug Service Calculator</h1>
-        <div class="pill">Minimums: Voyage base to base 1h · Assistance 30m</div>
+        <div class="pill">Minimums: Voyage 1h · Assistance 30m</div>
       </div>
       <div class="density-toggle" role="group" aria-label="Density">
         <button id="densityComfortable" type="button" class="active">Comfortable</button>
@@ -327,6 +327,10 @@
       <label class="checkbox imo-master-label" style="margin-top:12px;">
         <input type="checkbox" id="imoMaster" />
         Transporting inflammable materials (IMO Code Classes I-III)
+      </label>
+      <label class="checkbox" style="margin-top:8px;">
+        <input type="checkbox" id="linesMaster" />
+        Usage of tug lines
       </label>
     </div>
 
@@ -436,7 +440,9 @@
       `);
 
       applyImoMaster();
+      applyLinesMaster();
       syncImoMaster();
+      syncLinesMaster();
       updateTugTitles();
       calculate();
     }
@@ -444,6 +450,7 @@
     function removeTug(id) {
       document.getElementById(`tug_${id}`)?.remove();
       syncImoMaster();
+      syncLinesMaster();
       updateTugTitles();
       calculate();
     }
@@ -461,12 +468,22 @@
     // IMO MASTER TOGGLE
     //----------------------------------
     const imoMaster = document.getElementById('imoMaster');
+    const linesMaster = document.getElementById('linesMaster');
 
     function applyImoMaster() {
       const checked = imoMaster.checked;
       imoMaster.indeterminate = false;
       for (let i = 1; i <= tugCount; i++) {
         const cb = document.getElementById(`imo_${i}`);
+        if (cb) cb.checked = checked;
+      }
+    }
+
+    function applyLinesMaster() {
+      const checked = linesMaster.checked;
+      linesMaster.indeterminate = false;
+      for (let i = 1; i <= tugCount; i++) {
+        const cb = document.getElementById(`lines_${i}`);
         if (cb) cb.checked = checked;
       }
     }
@@ -497,8 +514,39 @@
       }
     }
 
+    function syncLinesMaster() {
+      let total = 0;
+      let checked = 0;
+      for (let i = 1; i <= tugCount; i++) {
+        const cb = document.getElementById(`lines_${i}`);
+        if (!cb) continue;
+        total++;
+        if (cb.checked) checked++;
+      }
+      if (total === 0) {
+        linesMaster.checked = false;
+        linesMaster.indeterminate = false;
+        return;
+      }
+      if (checked === 0) {
+        linesMaster.checked = false;
+        linesMaster.indeterminate = false;
+      } else if (checked === total) {
+        linesMaster.checked = true;
+        linesMaster.indeterminate = false;
+      } else {
+        linesMaster.checked = false;
+        linesMaster.indeterminate = true;
+      }
+    }
+
     imoMaster.addEventListener('change', () => {
       applyImoMaster();
+      calculate();
+    });
+
+    linesMaster.addEventListener('change', () => {
+      applyLinesMaster();
       calculate();
     });
 
@@ -506,6 +554,9 @@
       const target = event.target;
       if (target && target.id && target.id.startsWith('imo_')) {
         syncImoMaster();
+      }
+      if (target && target.id && target.id.startsWith('lines_')) {
+        syncLinesMaster();
       }
     });
 
