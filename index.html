@@ -78,6 +78,11 @@
       animation: rise 420ms ease;
     }
 
+    .card.selected {
+      border-color: #0f766e;
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.2), var(--shadow);
+    }
+
     @keyframes rise {
       from { transform: translateY(10px); opacity: 0; }
       to { transform: translateY(0); opacity: 1; }
@@ -314,6 +319,7 @@
 
     <div class="actions">
       <button onclick="addTug()">+ Add Tugboat</button>
+      <button onclick="duplicateLastTug()">Duplicate Card</button>
       <button class="secondary" onclick="window.print()">Print / Save as PDF</button>
     </div>
 
@@ -431,7 +437,6 @@
       calculate();
     }
 
-
     function duplicateTug(id) {
       const source = document.getElementById(`tug_${id}`);
       if (!source) return;
@@ -463,6 +468,36 @@
       calculate();
     }
 
+    function duplicateLastTug() {
+      const selectedId = getSelectedTugId();
+      if (selectedId) {
+        duplicateTug(selectedId);
+        return;
+      }
+      const cards = document.querySelectorAll('#tugCards .card');
+      if (cards.length === 0) {
+        addTug();
+        return;
+      }
+      const last = cards[cards.length - 1];
+      const id = last.id.split('_')[1];
+      duplicateTug(Number(id));
+    }
+
+    function setSelectedTug(id) {
+      const cards = document.querySelectorAll('#tugCards .card');
+      cards.forEach(card => card.classList.remove('selected'));
+      const target = document.getElementById(`tug_${id}`);
+      if (target) target.classList.add('selected');
+    }
+
+    function getSelectedTugId() {
+      const selected = document.querySelector('#tugCards .card.selected');
+      if (!selected) return null;
+      const parts = selected.id.split('_');
+      return parts.length > 1 ? Number(parts[1]) : null;
+    }
+
     //----------------------------------
     // AUTO CALC LISTENERS
     //----------------------------------
@@ -472,8 +507,17 @@
       calculate();
     });
 
+    document.getElementById('tugCards').addEventListener('click', (event) => {
+      const card = event.target.closest('.card');
+      if (!card) return;
+      const id = card.id.split('_')[1];
+      setSelectedTug(id);
+    });
+
     //----------------------------------
     // IMO MASTER TOGGLE
+    //----------------------------------
+
     //----------------------------------
     const imoMaster = document.getElementById('imoMaster');
     const linesMaster = document.getElementById('linesMaster');
