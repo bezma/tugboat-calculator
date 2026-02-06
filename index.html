@@ -35,23 +35,6 @@
       padding: 28px 16px 48px;
     }
 
-    body.density-comfortable .card { padding: 20px 22px; margin-bottom: 18px; }
-    body.density-comfortable label { margin-top: 12px; }
-    body.density-comfortable input,
-    body.density-comfortable select { padding: 11px 13px; font-size: 15px; }
-    body.density-comfortable .row { gap: 12px; }
-    body.density-comfortable .actions { gap: 12px; margin-bottom: 18px; }
-    body.density-comfortable button { font-size: 15px; }
-
-    body.density-dense .card { padding: 12px 14px; margin-bottom: 10px; }
-    body.density-dense label { margin-top: 8px; font-size: 13px; }
-    body.density-dense input,
-    body.density-dense select { padding: 8px 10px; font-size: 14px; }
-    body.density-dense .row { gap: 8px; }
-    body.density-dense .actions { gap: 8px; margin-bottom: 10px; }
-    body.density-dense button { font-size: 13px; padding: 10px 12px; }
-    body.density-dense .tug-total { font-size: 13px; padding: 8px 10px; }
-
     .container {
       max-width: 980px;
       margin: 0 auto;
@@ -66,9 +49,17 @@
     }
 
     .hero h1 {
-      font-size: clamp(28px, 3.8vw, 44px);
+      font-size: clamp(30px, 4.2vw, 50px);
       letter-spacing: -0.02em;
-      margin: 0 0 6px;
+      margin: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #ecfeff;
+      color: #0f766e;
+      font-weight: 700;
     }
 
     .hero p {
@@ -81,8 +72,8 @@
       background: var(--card);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 16px 18px;
-      margin-bottom: 14px;
+      padding: 20px 22px;
+      margin-bottom: 18px;
       border: 1px solid rgba(15, 23, 42, 0.06);
       animation: rise 420ms ease;
     }
@@ -94,9 +85,9 @@
 
     label {
       display: block;
-      margin-top: 10px;
+      margin-top: 12px;
       font-weight: 600;
-      font-size: 14px;
+      font-size: 15px;
       line-height: 1.35;
       color: #1f2937;
     }
@@ -113,7 +104,7 @@
 
     input, select {
       width: 100%;
-      padding: 9px 11px;
+      padding: 11px 13px;
       margin-top: 6px;
       border-radius: 10px;
       border: 1px solid #d1d5db;
@@ -139,7 +130,7 @@
     .row {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 10px;
+      gap: 12px;
     }
 
     .section-title {
@@ -164,8 +155,8 @@
     .actions {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 10px;
-      margin-bottom: 14px;
+      gap: 12px;
+      margin-bottom: 18px;
     }
 
     #tugCards {
@@ -192,7 +183,7 @@
       border-radius: 12px;
       background: var(--accent);
       color: white;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 600;
       cursor: pointer;
       transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
@@ -212,10 +203,34 @@
     }
 
     .tug-header {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
       gap: 12px;
+    }
+
+    .tug-header h3 {
+      text-align: center;
+      margin: 0;
+    }
+
+    .icon-btn {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      border-radius: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      box-shadow: none;
+    }
+
+    .icon-btn img {
+      width: 24px;
+      height: 24px;
+      display: block;
     }
 
     .tug-total {
@@ -224,13 +239,13 @@
       background: #f1f5f9;
       border-radius: 12px;
       font-weight: 700;
-      font-size: 14px;
+      font-size: 15px;
     }
 
     .summary {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 10px;
+      gap: 12px;
       align-items: center;
       font-size: 15px;
       line-height: 1.4;
@@ -238,50 +253,13 @@
 
     .summary strong { font-size: 18px; }
 
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: #ecfeff;
-      color: #0f766e;
-      font-weight: 600;
-      font-size: 12px;
-      margin-top: 6px;
-    }
-
-    .density-toggle {
-      display: inline-flex;
-      gap: 6px;
-      padding: 6px;
-      border-radius: 999px;
-      background: #fff;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
-    }
-
-    .density-toggle button {
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: transparent;
-      color: #111827;
-      box-shadow: none;
-      font-size: 13px;
-    }
-
-    .density-toggle button.active {
-      background: #0f766e;
-      color: #fff;
-    }
-
     @media print {
       button { display: none; }
       body { background: white; padding: 0; }
       .card { box-shadow: none; border: 1px solid #e5e7eb; }
       .card { padding: 12px 14px; margin-bottom: 10px; }
       label { margin-top: 8px; font-size: 13px; }
-      input, select { padding: 8px 10px; font-size: 14px; }
+      input, select { padding: 8px 10px; font-size: 15px; }
       .row { gap: 8px; }
       .actions { gap: 8px; margin-bottom: 10px; }
       button { font-size: 13px; padding: 10px 12px; }
@@ -303,11 +281,6 @@
     <div class="hero">
       <div>
         <h1>Tug Service Calculator</h1>
-        <div class="pill">Minimums: Voyage 1h · Assistance 30m</div>
-      </div>
-      <div class="density-toggle" role="group" aria-label="Density">
-        <button id="densityComfortable" type="button" class="active">Comfortable</button>
-        <button id="densityDense" type="button">Dense</button>
       </div>
     </div>
 
@@ -315,7 +288,7 @@
       <div class="row">
         <div>
           <label>Vessel Name</label>
-          <input id="vesselName" placeholder="e.g., M/V King Bezma" />
+          <input id="vesselName" placeholder="e.g., MV King Bezma" />
         </div>
         <div>
           <label>Gross Tonnage (GT)</label>
@@ -329,7 +302,7 @@
       </div>
       <label class="checkbox imo-master-label" style="margin-top:12px;">
         <input type="checkbox" id="imoMaster" />
-        Transporting inflammable materials (IMO Code Classes I-III)
+        Towed ship transporting (IMO Code Classes I-III)
       </label>
       <label class="checkbox" style="margin-top:8px;">
         <input type="checkbox" id="linesMaster" />
@@ -341,14 +314,13 @@
 
     <div class="actions">
       <button onclick="addTug()">+ Add Tugboat</button>
-      <button class="secondary" onclick="printDense()">Print / Save as PDF</button>
+      <button class="secondary" onclick="window.print()">Print / Save as PDF</button>
     </div>
 
     <div class="card" id="finalTotal" style="display:none;"></div>
   </div>
 
   <script>
-    document.body.classList.add('density-comfortable');
 
     let tugCount = 0;
 
@@ -394,8 +366,9 @@
       document.getElementById('tugCards').insertAdjacentHTML('beforeend', `
         <div class="card" id="tug_${tugCount}">
           <div class="tug-header">
+            <button class="icon-btn" onclick="removeTug(${tugCount})" aria-label="Remove tugboat"><img src="remove_48x48.png" alt="Remove"></button>
             <h3 class="tug-title">Tugboat</h3>
-            <button class="danger" onclick="removeTug(${tugCount})">Remove</button>
+            <button class="icon-btn" onclick="duplicateTug(${tugCount})" aria-label="Duplicate tugboat"><img src="duplicate_48x48.png" alt="Duplicate"></button>
           </div>
 
           <label>Operation</label>
@@ -419,7 +392,7 @@
           </select>
 
           <div class="section-title">Assistance Surcharges</div>
-          <label class="checkbox"><input type="checkbox" id="imo_${tugCount}" /> 20% IMO (Inflammable cargo)</label>
+          <label class="checkbox"><input type="checkbox" id="imo_${tugCount}" /> 20% IMO Code Classes I-III</label>
           <label class="checkbox"><input type="checkbox" id="lines_${tugCount}" /> 15% Usage of tug lines</label>
           <label class="checkbox"><input type="checkbox" id="kw_${tugCount}" /> 30% Tug above 2000 kW</label>
 
@@ -452,6 +425,38 @@
 
     function removeTug(id) {
       document.getElementById(`tug_${id}`)?.remove();
+      syncImoMaster();
+      syncLinesMaster();
+      updateTugTitles();
+      calculate();
+    }
+
+
+    function duplicateTug(id) {
+      const source = document.getElementById(`tug_${id}`);
+      if (!source) return;
+
+      addTug();
+      const newId = tugCount;
+
+      const fields = [
+        ['op', 'value'],
+        ['voyage', 'value'],
+        ['assist', 'value'],
+        ['imo', 'checked'],
+        ['lines', 'checked'],
+        ['kw', 'checked'],
+        ['voy_ot', 'value'],
+        ['assist_ot', 'value']
+      ];
+
+      for (const [key, prop] of fields) {
+        const from = document.getElementById(`${key}_${id}`);
+        const to = document.getElementById(`${key}_${newId}`);
+        if (!from || !to) continue;
+        to[prop] = from[prop];
+      }
+
       syncImoMaster();
       syncLinesMaster();
       updateTugTitles();
@@ -564,30 +569,8 @@
     });
 
     //----------------------------------
-    // DENSITY TOGGLE
-    //----------------------------------
-    const densityComfortable = document.getElementById('densityComfortable');
-    const densityDense = document.getElementById('densityDense');
-
-    function setDensity(mode) {
-      document.body.classList.toggle('density-comfortable', mode === 'comfortable');
-      document.body.classList.toggle('density-dense', mode === 'dense');
-      densityComfortable.classList.toggle('active', mode === 'comfortable');
-      densityDense.classList.toggle('active', mode === 'dense');
-    }
-
-    densityComfortable.addEventListener('click', () => setDensity('comfortable'));
-    densityDense.addEventListener('click', () => setDensity('dense'));
 
     //----------------------------------
-    // PRINT IN DENSE MODE
-    //----------------------------------
-    function printDense() {
-      const wasComfortable = document.body.classList.contains('density-comfortable');
-      setDensity('dense');
-      window.print();
-      if (wasComfortable) setDensity('comfortable');
-    }
 
     //----------------------------------
     // CALC ENGINE WITH MINIMUM BILLING
