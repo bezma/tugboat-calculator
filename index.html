@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tug Service Calculator</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="images/remorker.png?v=1" />
+  <link rel="apple-touch-icon" href="images/remorker.png?v=1" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="page-tugs">
+  <div class="container">
+    <div class="actions top-home-actions">
+      <button type="button" class="home-icon-btn" onclick="goHome()" aria-label="Home"><img src="images/remorker.png" alt="Home" /></button>
+      <span class="actions-spacer" aria-hidden="true"></span>
+      <span class="actions-spacer" aria-hidden="true"></span>
+      <span class="actions-spacer" aria-hidden="true"></span>
+    </div>
+
+    <div class="card" id="tugSummaryCard">
+      <div class="row">
+        <div>
+          <label>Vessel Name</label>
+          <input id="vesselName" placeholder="e.g., MV King Bezma" />
+        </div>
+        <div>
+          <label>Gross Tonnage (GT)</label>
+          <input type="number" id="gt" min="0" placeholder="Enter GT" />
+        </div>
+        <div>
+          <label>Base Tariff (EUR / hour)</label>
+          <input type="number" id="tariff" readonly />
+          <div class="note">Tariff is auto-selected from GT</div>
+          <div class="tug-summary-discount-note print-only" id="tugSummaryDiscountNote" hidden></div>
+        </div>
+      </div>
+      <div class="tug-options mt-12">
+        <button type="button" id="tugOptionsToggle" class="tug-options-toggle" aria-expanded="false" aria-controls="tugOptionsBody">
+          <span>Options</span>
+          <span class="chevron" aria-hidden="true"></span>
+        </button>
+        <div id="tugOptionsBody" class="tug-options-body" hidden>
+          <label class="checkbox imo-master-label">
+            <input type="checkbox" id="imoMaster" />
+            Towed ship transporting (IMO Code Classes I-III)
+          </label>
+          <label class="checkbox">
+            <input type="checkbox" id="linesMaster" />
+            Usage of tug lines
+          </label>
+          <label class="checkbox">
+            <input type="checkbox" id="arrivalOtMaster" />
+            Arrival overtime (25% Mon-Sat)
+          </label>
+          <label class="checkbox tug-sub-option" id="arrivalOtSundayWrap" hidden>
+            <input type="checkbox" id="arrivalOtSunday" />
+            Sunday/Holiday overtime (50% Sun &amp; Holiday)
+          </label>
+          <label class="checkbox">
+            <input type="checkbox" id="departureOtMaster" />
+            Departure overtime (25% Mon-Sat)
+          </label>
+          <label class="checkbox tug-sub-option" id="departureOtSundayWrap" hidden>
+            <input type="checkbox" id="departureOtSunday" />
+            Sunday/Holiday overtime (50% Sun &amp; Holiday)
+          </label>
+          <div class="tug-standby" id="tugStandbyWrap" hidden>
+            <label class="checkbox">
+              <input type="checkbox" id="standbyEnabled" />
+              Tugboat in Stand By
+            </label>
+          </div>
+          <div class="tug-discount">
+            <label class="checkbox">
+              <input type="checkbox" id="discountEnabled" />
+              Approved discount
+            </label>
+            <span class="tug-discount-field">
+              <input type="number" id="discountPercent" min="0" max="100" step="0.001" placeholder="0" />
+              <span class="tug-discount-suffix">%</span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tugCards">
+      <div class="card tug-standby-card" id="tugStandbyCard" hidden>
+        <div class="tug-header">
+          <span class="tug-header-spacer" aria-hidden="true"></span>
+          <h3 class="tug-title">Stand By Tugboat</h3>
+          <span class="tug-header-spacer" aria-hidden="true"></span>
+        </div>
+
+        <label>Stand By Hours</label>
+        <input type="number" id="standbyHours" min="0" step="0.01" placeholder="0" />
+        <div class="note">€168,00 for each started hour</div>
+        <div class="tug-total" id="standbyTotal">Stand by Tugboat total: €0.00</div>
+        <div class="tug-breakdown-print" id="tugStandbyBreakdown"></div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button onclick="addTug()">+ Add Tugboat</button>
+      <button onclick="duplicateLastTug()">Duplicate Card</button>
+      <button class="secondary" onclick="printWithTitle()">Print / Save as PDF</button>
+    </div>
+
+    <div class="card" id="finalTotal"></div>
+  </div>
+
+  
+  <script src="js/script.js" defer></script>
+</body>
+</html>
