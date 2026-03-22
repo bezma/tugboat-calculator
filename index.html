@@ -11,18 +11,18 @@
 <body class="page-tugs">
   <div class="container">
     <div class="actions top-home-actions">
-      <button type="button" class="home-icon-btn" onclick="goHome()" aria-label="Home"><img src="images/remorker.png" alt="Home" /></button>
+      <button type="button" class="home-icon-btn" onclick="goHome()" aria-label="Home" aria-pressed="false"><img src="images/remorker.png" alt="Home" /></button>
       <div class="top-home-summary">
         <div class="row top-home-summary-row">
-          <div>
+          <div class="top-home-field top-home-field-vessel">
             <label>Vessel Name</label>
             <input id="vesselName" placeholder="e.g., MV King Bezma" />
           </div>
-          <div>
+          <div class="top-home-field top-home-field-gt">
             <label>Gross Tonnage (GT)</label>
             <input type="number" id="gt" min="0" placeholder="Enter GT" />
           </div>
-          <div>
+          <div class="top-home-field top-home-field-tariff">
             <label>Base Tariff (€ / h)</label>
             <input type="number" id="tariff" readonly />
             <div class="tug-summary-discount-note print-only" id="tugSummaryDiscountNote" hidden></div>

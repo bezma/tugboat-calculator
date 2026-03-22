@@ -3,6 +3,7 @@ const STORAGE_KEYS = {
   vesselName: 'vessel_name',
   gt: 'gt',
   globalImoTransport: 'global_imo_transport',
+  mobileHomeCompact: 'mobile_home_compact',
   towageTotal: 'towage_total',
   towageArrivalCount: 'towage_arrival_count',
   towageDepartureCount: 'towage_departure_count',
@@ -84,6 +85,14 @@ function getGlobalImoTransportState() {
 
 function setGlobalImoTransportState(checked) {
   safeStorageSet(STORAGE_KEYS.globalImoTransport, checked ? '1' : '0');
+}
+
+function getStoredMobileHomeCompactState() {
+  return parseStoredBoolean(safeStorageGet(STORAGE_KEYS.mobileHomeCompact)) === true;
+}
+
+function setStoredMobileHomeCompactState(compact) {
+  safeStorageSet(STORAGE_KEYS.mobileHomeCompact, compact ? '1' : '0');
 }
 
 function parseMoneyValue(raw) {
@@ -1014,7 +1023,30 @@ function calculate() {
 
 function goHome() {
   saveTugsState();
+  if (toggleMobileHomeCompactState()) return;
   window.location.href = 'index.html';
+}
+
+function applyMobileHomeCompactState(forceCompact = getStoredMobileHomeCompactState()) {
+  const topBar = document.querySelector('body.page-tugs .actions.top-home-actions');
+  const homeButton = topBar ? topBar.querySelector('.home-icon-btn') : null;
+  if (!topBar) return false;
+  const nextCompact = isLikelyMobileViewport() && Boolean(forceCompact);
+  topBar.classList.toggle('mobile-home-compact', nextCompact);
+  if (homeButton) {
+    homeButton.setAttribute('aria-pressed', nextCompact ? 'true' : 'false');
+  }
+  syncTopHomeBarOffset();
+  return nextCompact;
+}
+
+function toggleMobileHomeCompactState() {
+  if (!isLikelyMobileViewport()) return false;
+  const topBar = document.querySelector('body.page-tugs .actions.top-home-actions');
+  const nextCompact = !(topBar && topBar.classList.contains('mobile-home-compact'));
+  setStoredMobileHomeCompactState(nextCompact);
+  applyMobileHomeCompactState(nextCompact);
+  return true;
 }
 
 function syncTopHomeBarOffset() {
@@ -1227,9 +1259,11 @@ function initTugs() {
   updateDiscountEnabledState();
   calculate();
   syncTopHomeSummaryColumns();
+  applyMobileHomeCompactState();
   syncTopHomeBarOffset();
   window.addEventListener('resize', () => {
     syncTopHomeSummaryColumns();
+    applyMobileHomeCompactState();
     syncTopHomeBarOffset();
   });
 
