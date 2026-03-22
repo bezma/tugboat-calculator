@@ -18,6 +18,7 @@ let printRestoreTitle = null;
 let mobilePrintPageStyle = null;
 let tugCount = 0;
 let isRestoringTugs = false;
+let isResettingTugs = false;
 
 const MIN_VOYAGE = 1;
 const MIN_ASSIST = 0.5;
@@ -313,7 +314,7 @@ function getTugServiceCards(root = document.getElementById('tugCards')) {
 }
 
 function saveTugsState() {
-  if (isRestoringTugs) return;
+  if (isRestoringTugs || isResettingTugs) return;
   const tugCards = document.getElementById('tugCards');
   if (!tugCards) return;
 
@@ -1042,6 +1043,16 @@ function calculate() {
   safeStorageSet(STORAGE_KEYS.towageTotal, grandTotal.toFixed(2));
   safeStorageSet(STORAGE_KEYS.towageArrivalCount, arrivalCount);
   safeStorageSet(STORAGE_KEYS.towageDepartureCount, departureCount);
+}
+
+function resetTugs() {
+  const shouldReset = window.confirm('Reset all tug data and refresh the page?');
+  if (!shouldReset) return;
+  isResettingTugs = true;
+  Object.values(STORAGE_KEYS).forEach((key) => {
+    safeStorageRemove(key);
+  });
+  window.location.reload();
 }
 
 function goHome() {
