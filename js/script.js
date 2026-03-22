@@ -1030,11 +1030,16 @@ function goHome() {
 function applyMobileHomeCompactState(forceCompact = getStoredMobileHomeCompactState()) {
   const topBar = document.querySelector('body.page-tugs .actions.top-home-actions');
   const homeButton = topBar ? topBar.querySelector('.home-icon-btn') : null;
+  const homeButtonLabel = homeButton ? homeButton.querySelector('.home-icon-toggle-label') : null;
   if (!topBar) return false;
   const nextCompact = isLikelyMobileViewport() && Boolean(forceCompact);
   topBar.classList.toggle('mobile-home-compact', nextCompact);
   if (homeButton) {
     homeButton.setAttribute('aria-pressed', nextCompact ? 'true' : 'false');
+    homeButton.setAttribute('aria-label', nextCompact ? 'Show more fields' : 'Hide extra fields');
+  }
+  if (homeButtonLabel) {
+    homeButtonLabel.textContent = nextCompact ? 'MORE' : 'LESS';
   }
   syncTopHomeBarOffset();
   return nextCompact;
@@ -1293,6 +1298,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     disableMobilePrintFooterSuppression();
     restorePrintTitleIfNeeded();
     clearTransientIconAnimationState(document);
+    syncTopHomeBarOffset();
   });
 
   window.addEventListener('beforeprint', () => {
@@ -1302,6 +1308,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
     } else {
       disableMobilePrintFooterSuppression();
     }
+    syncTopHomeBarOffset();
   });
 
   window.addEventListener('pageshow', () => {
