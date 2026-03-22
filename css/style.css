@@ -658,6 +658,10 @@ body.page-tugs .print-only {
   display: none;
 }
 
+body.page-tugs .print-summary-value {
+  display: none;
+}
+
 body.page-tugs .summary-discount {
   font-weight: 700;
   color: #111827;
@@ -682,20 +686,23 @@ body.page-tugs .tug-summary-discount-note {
   }
 
   body.page-tugs .container {
+    width: 100% !important;
+    max-width: none !important;
     padding-top: 0 !important;
   }
 
   body.page-tugs .actions.top-home-actions {
+    width: 100% !important;
     position: static;
     left: auto;
     width: auto;
     transform: none;
     display: block !important;
-    padding: 8px 10px;
-    margin-bottom: 8px;
-    border: 1px solid #cbd5e1;
-    border-radius: 0;
-    background: #f8fafc;
+    padding: 7px 12px 8px;
+    margin-bottom: 10px;
+    border: 1px solid #d8e0ea;
+    border-radius: 12px;
+    background: #ffffff;
     box-shadow: none;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
@@ -791,14 +798,25 @@ body.page-tugs .tug-summary-discount-note {
   }
 
   body.page-tugs .actions.top-home-actions .top-home-summary .row {
-    grid-template-columns: 2fr 1fr 1fr;
-    gap: 8px;
+    display: grid !important;
+    width: 100% !important;
+    grid-template-columns: minmax(0, 2fr) minmax(120px, 1fr) minmax(120px, 1fr) !important;
+    gap: 14px !important;
+    align-items: start;
   }
 
   body.page-tugs .actions.top-home-actions .top-home-summary .top-home-summary-row > div {
-    grid-template-columns: auto minmax(0, 1fr);
-    column-gap: 8px;
-    row-gap: 2px;
+    display: grid !important;
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: minmax(0, 1fr) !important;
+    row-gap: 3px;
+    align-items: start;
+  }
+
+  body.page-tugs .actions.top-home-actions.mobile-home-compact .top-home-summary .top-home-field-gt,
+  body.page-tugs .actions.top-home-actions.mobile-home-compact .top-home-summary .top-home-field-tariff {
+    display: grid !important;
   }
 
   body.page-tugs .actions.top-home-actions .top-home-summary .note,
@@ -814,22 +832,32 @@ body.page-tugs .tug-summary-discount-note {
 
   body.page-tugs .actions.top-home-actions .top-home-summary label {
     margin-top: 0;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
-    color: #475569;
+    color: #64748b;
+    line-height: 1.2;
   }
 
-  body.page-tugs .actions.top-home-actions .top-home-summary input,
-  body.page-tugs .actions.top-home-actions .top-home-summary input[readonly] {
-    margin-top: 2px;
+  body.page-tugs .actions.top-home-actions .top-home-summary .top-home-summary-row input,
+  body.page-tugs .actions.top-home-actions .top-home-summary .top-home-summary-row input[readonly] {
+    display: none !important;
+  }
+
+  body.page-tugs .actions.top-home-actions .top-home-summary .print-summary-value {
+    display: block;
+    margin-top: 0;
     padding: 0;
     border: none;
-    border-radius: 0;
     background: transparent;
     box-shadow: none;
-    font-size: 14px;
-    font-weight: 700;
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.15;
     color: #111827;
+  }
+
+  body.page-tugs .actions.top-home-actions .top-home-summary .top-home-field-vessel .print-summary-value {
+    font-size: 20px;
   }
 
   body.page-tugs .tug-breakdown-print {
