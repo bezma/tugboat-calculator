@@ -17,14 +17,17 @@
           <div class="top-home-field top-home-field-vessel">
             <label>Vessel Name</label>
             <input id="vesselName" placeholder="e.g., MV King Bezma" />
+            <span class="print-summary-value" id="vesselNamePrint"></span>
           </div>
           <div class="top-home-field top-home-field-gt">
             <label>Gross Tonnage (GT)</label>
             <input type="number" id="gt" min="0" placeholder="Enter GT" />
+            <span class="print-summary-value" id="gtPrint"></span>
           </div>
           <div class="top-home-field top-home-field-tariff">
             <label>Base Tariff (€ / h)</label>
             <input type="number" id="tariff" readonly />
+            <span class="print-summary-value" id="tariffPrint"></span>
             <div class="tug-summary-discount-note print-only" id="tugSummaryDiscountNote" hidden></div>
           </div>
         </div>

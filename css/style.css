@@ -659,7 +659,16 @@ body.page-tugs .print-only {
 }
 
 body.page-tugs .print-summary-value {
-  display: none;
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 
 body.page-tugs .summary-discount {
@@ -844,8 +853,15 @@ body.page-tugs .tug-summary-discount-note {
   }
 
   body.page-tugs .actions.top-home-actions .top-home-summary .print-summary-value {
+    position: static;
+    width: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    clip-path: none;
+    white-space: normal;
     display: block;
-    margin-top: 0;
     padding: 0;
     border: none;
     background: transparent;

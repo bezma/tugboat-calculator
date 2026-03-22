@@ -201,7 +201,26 @@ function restorePrintTitleIfNeeded() {
   printRestoreTitle = null;
 }
 
+function syncPrintSummaryValues() {
+  const vesselInput = document.getElementById('vesselName');
+  const gtInput = document.getElementById('gt');
+  const tariffInput = document.getElementById('tariff');
+  const vesselPrint = document.getElementById('vesselNamePrint');
+  const gtPrint = document.getElementById('gtPrint');
+  const tariffPrint = document.getElementById('tariffPrint');
+
+  if (vesselPrint) {
+    const vesselValue = vesselInput && vesselInput.value && vesselInput.value.trim()
+      ? vesselInput.value.trim()
+      : (vesselInput && vesselInput.placeholder ? vesselInput.placeholder : '');
+    vesselPrint.textContent = vesselValue;
+  }
+  if (gtPrint) gtPrint.textContent = gtInput && gtInput.value ? gtInput.value : '';
+  if (tariffPrint) tariffPrint.textContent = tariffInput && tariffInput.value ? tariffInput.value : '';
+}
+
 function printWithTitle() {
+  syncPrintSummaryValues();
   setPrintTitleFromVessel();
   window.requestAnimationFrame(() => {
     window.setTimeout(() => {
@@ -936,6 +955,7 @@ function renderTugStandbyPrintBreakdown(charge, hoursRaw) {
 
 function calculate() {
   saveTugsState();
+  syncPrintSummaryValues();
   const tariffInput = document.getElementById('tariff');
   const final = document.getElementById('finalTotal');
   if (!tariffInput || !final) return;
@@ -1131,6 +1151,7 @@ function initTugs() {
       if (value) safeStorageSet(STORAGE_KEYS.vesselName, value);
       else safeStorageRemove(STORAGE_KEYS.vesselName);
       syncTopHomeSummaryColumns();
+      syncPrintSummaryValues();
       saveTugsState();
     });
   }
@@ -1163,6 +1184,7 @@ function initTugs() {
       const gt = Number(gtInput.value);
       tariffInput.value = getTariffFromGT(gt) || '';
       updateTugStandbyVisibility();
+      syncPrintSummaryValues();
     };
 
     syncGtAndTariff();
@@ -1172,6 +1194,7 @@ function initTugs() {
       if (value) safeStorageSet(STORAGE_KEYS.gt, value);
       else safeStorageRemove(STORAGE_KEYS.gt);
       updateTugStandbyVisibility();
+      syncPrintSummaryValues();
       calculate();
     });
   }
@@ -1284,6 +1307,7 @@ function initTugs() {
   updateDiscountEnabledState();
   calculate();
   syncTopHomeSummaryColumns();
+  syncPrintSummaryValues();
   applyMobileHomeCompactState();
   syncTopHomeBarOffset();
   window.addEventListener('resize', () => {
@@ -1299,12 +1323,14 @@ function initTugs() {
     }
     if (event.key === getScopedStorageKey(STORAGE_KEYS.vesselName) && vesselNameInput) {
       updateVesselNameFromStorage(vesselNameInput);
+      syncPrintSummaryValues();
     }
     if (event.key === getScopedStorageKey(STORAGE_KEYS.gt) && gtInput && tariffInput) {
       const storedGt = safeStorageGet(STORAGE_KEYS.gt) || '';
       if (gtInput.value !== storedGt) gtInput.value = storedGt;
       tariffInput.value = getTariffFromGT(Number(gtInput.value)) || '';
       updateTugStandbyVisibility();
+      syncPrintSummaryValues();
       calculate();
     }
   });
@@ -1322,6 +1348,7 @@ if (typeof window !== 'undefined' && window.addEventListener) {
   });
 
   window.addEventListener('beforeprint', () => {
+    syncPrintSummaryValues();
     setPrintTitleFromVessel();
     if (isLikelyMobileViewport()) {
       enableMobilePrintFooterSuppression();
