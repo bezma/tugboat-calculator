@@ -764,6 +764,10 @@ body.page-tugs .tug-summary-discount-note {
     margin-bottom: 10px;
   }
 
+  body.page-tugs .actions:not(.top-home-actions) {
+    display: none !important;
+  }
+
   body.page-tugs .tug-total {
     font-size: 13px;
     padding: 8px 10px;
