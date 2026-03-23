@@ -1074,6 +1074,9 @@ function syncTopHomeOptionsVisibility() {
   else tugOptionsToggleEl.setAttribute('aria-hidden', 'true');
 
   tugOptionsToggleEl.setAttribute('aria-expanded', showBody ? 'true' : 'false');
+  const tugOptionsToggleLabel = tugOptionsToggleEl.querySelector('.tug-options-toggle-label');
+  if (tugOptionsToggleLabel) tugOptionsToggleLabel.textContent = showBody ? 'LESS' : 'MORE';
+  tugOptionsToggleEl.setAttribute('aria-label', showBody ? 'Show fewer options' : 'Show more options');
   tugOptionsBodyEl.hidden = !showBody;
   syncTopHomeBarOffset();
 }
