@@ -1048,11 +1048,68 @@ function calculate() {
 function resetTugs() {
   const shouldReset = window.confirm('Reset all tug data and refresh the page?');
   if (!shouldReset) return;
+
   isResettingTugs = true;
   Object.values(STORAGE_KEYS).forEach((key) => {
     safeStorageRemove(key);
   });
-  window.location.reload();
+
+  const tugCards = document.getElementById('tugCards');
+  const vesselNameInput = document.getElementById('vesselName');
+  const gtInput = document.getElementById('gt');
+  const tariffInput = document.getElementById('tariff');
+  const final = document.getElementById('finalTotal');
+  const summaryDiscountNote = document.getElementById('tugSummaryDiscountNote');
+
+  getTugServiceCards(tugCards).forEach((card) => card.remove());
+  tugCount = 0;
+
+  if (vesselNameInput) vesselNameInput.value = '';
+  if (gtInput) gtInput.value = '';
+  if (tariffInput) tariffInput.value = '';
+
+  if (imoMaster) {
+    imoMaster.checked = false;
+    imoMaster.indeterminate = false;
+    updateImoToggleLabelColor(imoMaster);
+  }
+  if (linesMaster) {
+    linesMaster.checked = false;
+    linesMaster.indeterminate = false;
+  }
+  if (arrivalOtMaster) arrivalOtMaster.checked = false;
+  if (arrivalOtSunday) arrivalOtSunday.checked = false;
+  if (departureOtMaster) departureOtMaster.checked = false;
+  if (departureOtSunday) departureOtSunday.checked = false;
+  if (discountEnabled) discountEnabled.checked = false;
+  if (discountPercentInput) discountPercentInput.value = '';
+  if (standbyEnabled) standbyEnabled.checked = false;
+  if (standbyHoursInput) standbyHoursInput.value = '';
+  if (standbyTotalEl) standbyTotalEl.textContent = 'Stand by Tugboat total: €0.00';
+  if (standbyBreakdownEl) standbyBreakdownEl.innerHTML = '';
+  if (summaryDiscountNote) {
+    summaryDiscountNote.hidden = true;
+    summaryDiscountNote.textContent = '';
+  }
+  if (final) {
+    final.style.display = 'none';
+    final.innerHTML = '';
+  }
+
+  updateDiscountEnabledState();
+  updateOvertimeMasterVisibility();
+  updateTugStandbyVisibility();
+  addTug();
+  syncImoMaster();
+  syncLinesMaster();
+  updateTugTitles();
+  syncTopHomeSummaryColumns();
+  syncPrintSummaryValues();
+  syncTopHomeBarOffset();
+
+  isResettingTugs = false;
+  calculate();
+  saveTugsState();
 }
 
 function goHome() {
@@ -1314,7 +1371,8 @@ function initTugs() {
     standbyHoursInput.addEventListener('input', calculate);
   }
 
-  restoreTugsState();
+  const restoredTugsState = restoreTugsState();
+  if (!restoredTugsState && getTugServiceCards().length === 0) addTug();
   updateTugStandbyVisibility();
   syncTugImoWithGlobalState(true);
   updateOvertimeMasterVisibility();
