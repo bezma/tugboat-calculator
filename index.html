@@ -27,8 +27,10 @@
           <div class="top-home-field top-home-field-tariff">
             <label>Base Tariff (€ / h)</label>
             <input type="number" id="tariff" readonly />
-            <span class="print-summary-value" id="tariffPrint"></span>
-            <div class="tug-summary-discount-note print-only" id="tugSummaryDiscountNote" hidden></div>
+            <div class="top-home-tariff-print-stack">
+              <span class="print-summary-value" id="tariffPrint"></span>
+              <div class="tug-summary-discount-note print-only" id="tugSummaryDiscountNote" hidden></div>
+            </div>
           </div>
         </div>
         <div class="tug-options mt-12">
@@ -103,7 +105,7 @@
     </div>
 
     <div class="actions">
-      <button onclick="addTug()">+ Add Tugboat</button>
+      <button class="add-tug-btn" onclick="addTug()"><span class="add-tug-btn-icon" aria-hidden="true"></span><span>Add Tugboat</span></button>
       <button class="danger reset-btn" onclick="resetTugs()"><span class="reset-btn-icon" aria-hidden="true"></span><span>Reset / Refresh</span></button>
       <button class="secondary print-btn" onclick="printWithTitle()"><span class="print-btn-icon" aria-hidden="true"></span><span>Print / Save as PDF</span></button>
     </div>
