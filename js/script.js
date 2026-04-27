@@ -1371,8 +1371,10 @@ function initTugs() {
     standbyHoursInput.addEventListener('input', calculate);
   }
 
-  const restoredTugsState = restoreTugsState();
-  if (!restoredTugsState && getTugServiceCards().length === 0) addTug();
+  restoreTugsState();
+  getTugServiceCards().forEach((card) => card.remove());
+  tugCount = 0;
+  saveTugsState();
   updateTugStandbyVisibility();
   syncTugImoWithGlobalState(true);
   updateOvertimeMasterVisibility();
